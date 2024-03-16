@@ -2,6 +2,8 @@ package edu.school21;
 
 import com.diogonunes.jcdp.color.api.Ansi;
 import com.diogonunes.jcdp.color.ColoredPrinter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Map {
     private Integer size;
@@ -120,6 +122,77 @@ public class Map {
         return isMoved;
     }
 
+    public void moveEnemies() {
+        List<int[]> enemies = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (maze[i][j].getValue() == properties.getEnemy()) {
+                    enemies.add(new int[] { i, j });
+                }
+            }
+        }
+        for (int[] enemy : enemies) {
+            moveEnemy(enemy[0], enemy[1]);
+        }
+    }
+
+    private void moveEnemy(int x, int y) {
+        if (canEnemyMove(x, y)) {
+            ChaseLogic chaseLogic = new ChaseLogic(convertMap(x, y));
+            switch (chaseLogic.makeMove()) {
+                case 'w':
+                    if (x - 1 >= 0 && (maze[x - 1][y].getValue() == properties.getEmpty() ||
+                            maze[x - 1][y].getValue() == properties.getPlayer())) {
+                        maze[x][y].setValue(properties.getEmpty());
+                        maze[x - 1][y].setValue(properties.getEnemy());
+                    }
+                    break;
+                case 's':
+                    if (x + 1 < size && (maze[x + 1][y].getValue() == properties.getEmpty() ||
+                            maze[x + 1][y].getValue() == properties.getPlayer())) {
+                        maze[x][y].setValue(properties.getEmpty());
+                        maze[x + 1][y].setValue(properties.getEnemy());
+                    }
+                    break;
+                case 'a':
+                    if (y - 1 >= 0 && (maze[x][y - 1].getValue() == properties.getEmpty() ||
+                            maze[x][y - 1].getValue() == properties.getPlayer())) {
+                        maze[x][y].setValue(properties.getEmpty());
+                        maze[x][y - 1].setValue(properties.getEnemy());
+                    }
+                    break;
+                case 'd':
+                    if (y + 1 < size && (maze[x][y + 1].getValue() == properties.getEmpty() ||
+                            maze[x][y + 1].getValue() == properties.getPlayer())) {
+                        maze[x][y].setValue(properties.getEmpty());
+                        maze[x][y + 1].setValue(properties.getEnemy());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private int[][] convertMap(int x, int y) {
+        int[][] map = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (maze[i][j].getValue() == properties.getWall() ||
+                        maze[i][j].getValue() == properties.getEnemy() ||
+                        maze[i][j].getValue() == properties.getGoal()) {
+                    map[i][j] = 1;
+                } else if (maze[i][j].getValue() == properties.getPlayer()) {
+                    map[i][j] = 2;
+                } else {
+                    map[i][j] = 0;
+                }
+            }
+        }
+        map[x][y] = -2;
+        return map;
+    }
+
     public boolean isWin() {
         int x = -1, y = -1;
         for (int i = 0; i < size; i++) {
@@ -147,14 +220,28 @@ public class Map {
                 }
             }
         }
-        if (x == -1 || y == -1 || !canMove(x, y)) {
+        if (x == -1 || y == -1 || !canPlayerMove(x, y)) {
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean canMove(int x, int y) {
+    private boolean canEnemyMove(int x, int y) {
+        if (x + 1 < size && maze[x + 1][y].getValue() == properties.getEmpty() ||
+                x - 1 >= 0 && maze[x - 1][y].getValue() == properties.getEmpty() ||
+                y + 1 < size && maze[x][y + 1].getValue() == properties.getEmpty() ||
+                y - 1 >= 0 && maze[x][y - 1].getValue() == properties.getEmpty() ||
+                x + 1 < size && maze[x + 1][y].getValue() == properties.getPlayer() ||
+                x - 1 >= 0 && maze[x - 1][y].getValue() == properties.getPlayer() ||
+                y + 1 < size && maze[x][y + 1].getValue() == properties.getPlayer() ||
+                y - 1 >= 0 && maze[x][y - 1].getValue() == properties.getPlayer()) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean canPlayerMove(int x, int y) {
         if (x + 1 < size && maze[x + 1][y].getValue() == properties.getEmpty() ||
                 x - 1 >= 0 && maze[x - 1][y].getValue() == properties.getEmpty() ||
                 y + 1 < size && maze[x][y + 1].getValue() == properties.getEmpty() ||

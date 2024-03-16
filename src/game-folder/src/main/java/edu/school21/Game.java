@@ -43,6 +43,11 @@ public class Game {
         }
         arguments.checkArgs();
 
+        Map map = new Map(arguments.getSize(), arguments.getWallsCount(),
+                arguments.getEnemiesCount(),
+                arguments.getProfile());
+        map.generateStartMap();
+
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         Terminal terminal = null;
         try {
@@ -51,10 +56,6 @@ public class Game {
             terminal.clearScreen();
             terminal.setCursorVisible(false);
 
-            Map map = new Map(arguments.getSize(), arguments.getWallsCount(),
-                    arguments.getEnemiesCount(),
-                    arguments.getProfile());
-            map.generateStartMap();
             map.printMap();
             isGameOver(map);
             KeyStroke keyStroke;
