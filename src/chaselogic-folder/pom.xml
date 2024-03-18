@@ -8,12 +8,6 @@
   <artifactId>chaselogic-folder</artifactId>
   <version>0.1</version>
 
-  <!-- <parent>
-    <artifactId>ex00</artifactId>
-    <groupId>edu.school21</groupId>
-    <version>0.1</version>
-  </parent> -->
-
   <name>chaselogic-folder</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>

@@ -1,6 +1,7 @@
 package edu.school21;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -102,7 +103,6 @@ public class ChaseLogic {
         int j = start.second;
         nodeDetails[i][j] = new Node(new Pair(i, j), 0.0);
         PriorityQueue<Tuple> openList = new PriorityQueue<>((o1, o2) -> (int) Math.round(o1.value - o2.value));
-
         openList.add(new Tuple(0.0, i, j));
         while (!openList.isEmpty()) {
             Tuple p = openList.peek();
@@ -112,6 +112,8 @@ public class ChaseLogic {
             closedList[i][j] = true;
             for (int addX = -1; addX <= 1; addX++) {
                 for (int addY = -1; addY <= 1; addY++) {
+                    if (addX != 0 && addY != 0)
+                        continue;
                     Pair neighbour = new Pair(i + addX, j + addY);
                     if (isValid(neighbour, size)) {
                         if (nodeDetails[neighbour.first] == null) {
@@ -134,7 +136,6 @@ public class ChaseLogic {
                                 nodeDetails[neighbour.first][neighbour.second].parent = new Pair(i, j);
                             }
                         }
-
                     }
                 }
             }
@@ -142,38 +143,39 @@ public class ChaseLogic {
         return null;
     }
 
-    // public char returnStep(int[][] map, int size, int startX, int startY, int
-    // destX, int destY) {
-    // List<Pair> path = aStarSearch(map, size, new Pair(startX, startY), new
-    // Pair(destX, destY));
-    // if (path == null) {
-    // return 'N';
-    // }
-
-    // }
-
-    public static void main(String[] args) {
-        int[][] grid = {
-                { 0, 0, 1, 1, 0, 1, 1, 1 },
-                { 0, 1, 1, 0, 0, 1, 0, 1 },
-                { 0, 0, 1, 0, 1, 1, 0, 1 },
-                { 0, 0, 1, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 1, 1, 0, 0, 0 },
-                { 1, 0, 0, 0, 1, 0, 0, 1 },
-                { 0, 0, 1, 0, 0, 0, 0, 1 },
-                { 1, 0, 0, 0, 0, 0, 0, 0 } };
-        Pair start = new Pair(0, 0);
-        Pair dest = new Pair(6, 6);
-        List<Pair> path = aStarSearch(grid, 8, start, dest);
-        if (path == null) {
-            System.out.println("Path doesn't exist");
-        } else {
-            System.out.println("Path found");
-            for (Pair p : path) {
-                System.out.println(p.first + " " + p.second);
+    public char returnStep(int[][] map) {
+        int size = map.length, startX = 0, startY = 0, destX = 0, destY = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (map[i][j] == -2) {
+                    startX = i;
+                    startY = j;
+                    map[i][j] = 0;
+                } else if (map[i][j] == 2) {
+                    destX = i;
+                    destY = j;
+                    map[i][j] = 0;
+                }
             }
         }
+        Pair start = new Pair(startX, startY);
+        Pair dest = new Pair(destX, destY);
+        List<Pair> path = aStarSearch(map, size, dest, start);
 
+        if (path != null) {
+
+            Pair next = path.get(1);
+            if (next.first == start.first - 1) {
+                return 'w';
+            } else if (next.first == start.first + 1) {
+                return 's';
+            } else if (next.second == start.second - 1) {
+                return 'a';
+            } else if (next.second == start.second + 1) {
+                return 'd';
+            }
+        }
+        return 'r';
     }
 
 }

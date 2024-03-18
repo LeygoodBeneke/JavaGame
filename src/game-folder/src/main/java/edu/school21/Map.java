@@ -132,45 +132,65 @@ public class Map {
             }
         }
         for (int[] enemy : enemies) {
-            moveEnemy(enemy[0], enemy[1]);
+            moveSingleEnemy(enemy[0], enemy[1]);
         }
     }
 
-    private void moveEnemy(int x, int y) {
+    private void moveSingleEnemy(int x, int y) {
         if (canEnemyMove(x, y)) {
-            ChaseLogic chaseLogic = new ChaseLogic(convertMap(x, y));
-            switch (chaseLogic.makeMove()) {
-                case 'w':
-                    if (x - 1 >= 0 && (maze[x - 1][y].getValue() == properties.getEmpty() ||
-                            maze[x - 1][y].getValue() == properties.getPlayer())) {
-                        maze[x][y].setValue(properties.getEmpty());
-                        maze[x - 1][y].setValue(properties.getEnemy());
+            int[][] chaseMap = convertMap(x, y);
+            ChaseLogic chaseLogic = new ChaseLogic();
+            char direction = chaseLogic.returnStep(chaseMap);
+            moveEnemy(direction, x, y);
+        }
+
+    }
+
+    private boolean moveEnemy(char direction, int x, int y) {
+
+        switch (direction) {
+            case 'w':
+                if (x - 1 >= 0 &&
+                        (maze[x - 1][y].getValue() == properties.getEmpty() ||
+                                maze[x - 1][y].getValue() == properties.getPlayer())) {
+                    maze[x][y].setValue(properties.getEmpty());
+                    maze[x - 1][y].setValue(properties.getEnemy());
+                    return true;
+                }
+            case 's':
+                if (x + 1 < size &&
+                        (maze[x + 1][y].getValue() == properties.getEmpty() ||
+                                maze[x + 1][y].getValue() == properties.getPlayer())) {
+                    maze[x][y].setValue(properties.getEmpty());
+                    maze[x + 1][y].setValue(properties.getEnemy());
+                    return true;
+                }
+            case 'a':
+                if (y - 1 >= 0 &&
+                        (maze[x][y - 1].getValue() == properties.getEmpty() ||
+                                maze[x][y - 1].getValue() == properties.getPlayer())) {
+                    maze[x][y].setValue(properties.getEmpty());
+                    maze[x][y - 1].setValue(properties.getEnemy());
+                    return true;
+                }
+            case 'd':
+                if (y + 1 < size &&
+                        (maze[x][y + 1].getValue() == properties.getEmpty() ||
+                                maze[x][y + 1].getValue() == properties.getPlayer())) {
+                    maze[x][y].setValue(properties.getEmpty());
+                    maze[x][y + 1].setValue(properties.getEnemy());
+                    return true;
+                }
+            case 'r':
+                while (true) {
+                    char[] directions = { 'w', 's', 'a', 'd' };
+                    int random = (int) (Math.random() * 4);
+                    if (moveEnemy(directions[random], x, y)) {
+                        return true;
                     }
-                    break;
-                case 's':
-                    if (x + 1 < size && (maze[x + 1][y].getValue() == properties.getEmpty() ||
-                            maze[x + 1][y].getValue() == properties.getPlayer())) {
-                        maze[x][y].setValue(properties.getEmpty());
-                        maze[x + 1][y].setValue(properties.getEnemy());
-                    }
-                    break;
-                case 'a':
-                    if (y - 1 >= 0 && (maze[x][y - 1].getValue() == properties.getEmpty() ||
-                            maze[x][y - 1].getValue() == properties.getPlayer())) {
-                        maze[x][y].setValue(properties.getEmpty());
-                        maze[x][y - 1].setValue(properties.getEnemy());
-                    }
-                    break;
-                case 'd':
-                    if (y + 1 < size && (maze[x][y + 1].getValue() == properties.getEmpty() ||
-                            maze[x][y + 1].getValue() == properties.getPlayer())) {
-                        maze[x][y].setValue(properties.getEmpty());
-                        maze[x][y + 1].setValue(properties.getEnemy());
-                    }
-                    break;
-                default:
-                    break;
-            }
+                }
+            default:
+                return false;
         }
     }
 
@@ -179,7 +199,6 @@ public class Map {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (maze[i][j].getValue() == properties.getWall() ||
-                        maze[i][j].getValue() == properties.getEnemy() ||
                         maze[i][j].getValue() == properties.getGoal()) {
                     map[i][j] = 1;
                 } else if (maze[i][j].getValue() == properties.getPlayer()) {

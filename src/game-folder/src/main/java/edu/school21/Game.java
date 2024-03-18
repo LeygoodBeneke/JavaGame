@@ -65,8 +65,9 @@ public class Game {
                     gameOver = -1;
                 if (map.movePlayer(keyStroke.getCharacter())) {
                     isGameOver(map);
-                    // map.moveEnemies();
                     terminal.clearScreen();
+                    map.moveEnemies();
+                    isGameOver(map);
                     map.printMap();
                     terminal.flush();
                 }
