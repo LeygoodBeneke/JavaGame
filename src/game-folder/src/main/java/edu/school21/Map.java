@@ -136,18 +136,17 @@ public class Map {
         }
     }
 
-    private void moveSingleEnemy(int x, int y) {
+    public void moveSingleEnemy(int x, int y) {
         if (canEnemyMove(x, y)) {
             int[][] chaseMap = convertMap(x, y);
-            ChaseLogic chaseLogic = new ChaseLogic();
-            char direction = chaseLogic.returnStep(chaseMap);
+            ChaseLogic chaseLogic = new ChaseLogic(chaseMap, size);
+            char direction = chaseLogic.returnStep();
             moveEnemy(direction, x, y);
         }
 
     }
 
     private boolean moveEnemy(char direction, int x, int y) {
-
         switch (direction) {
             case 'w':
                 if (x - 1 >= 0 &&

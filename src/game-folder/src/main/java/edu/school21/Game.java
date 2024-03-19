@@ -12,14 +12,6 @@ public class Game {
     private static Game instance;
     private int gameOver = 0;
 
-    private void isGameOver(Map map) {
-        if (map.isWin()) {
-            gameOver = 1;
-        } else if (map.isLose()) {
-            gameOver = -1;
-        }
-    }
-
     private Game() {
     }
 
@@ -28,6 +20,14 @@ public class Game {
             instance = new Game();
         }
         return instance;
+    }
+
+    private void isGameOver(Map map) {
+        if (map.isWin()) {
+            gameOver = 1;
+        } else if (map.isLose()) {
+            gameOver = -1;
+        }
     }
 
     public void run(String[] args) {
@@ -66,7 +66,11 @@ public class Game {
                 if (map.movePlayer(keyStroke.getCharacter())) {
                     isGameOver(map);
                     terminal.clearScreen();
-                    map.moveEnemies();
+                    if (arguments.getProfile().equals("development")) {
+                        map.moveEnemies();
+                    } else {
+                        map.moveEnemies();
+                    }
                     isGameOver(map);
                     map.printMap();
                     terminal.flush();
