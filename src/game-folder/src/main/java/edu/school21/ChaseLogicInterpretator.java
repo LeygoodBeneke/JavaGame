@@ -2,7 +2,7 @@ package edu.school21;
 
 import java.util.List;
 
-public class ChaseLogic {
+public class ChaseLogicInterpretator {
     private int[][] map;
     private int size;
     private int startX;
@@ -10,7 +10,7 @@ public class ChaseLogic {
     private int destX;
     private int destY;
 
-    public ChaseLogic(int[][] map, int size) {
+    public ChaseLogicInterpretator(int[][] map, int size) {
         this.map = map;
         this.size = size;
         for (int i = 0; i < size; i++) {

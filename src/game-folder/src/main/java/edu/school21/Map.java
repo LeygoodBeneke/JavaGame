@@ -150,11 +150,10 @@ public class Map {
     public void moveSingleEnemy(int x, int y) {
         if (canEnemyMove(x, y)) {
             int[][] chaseMap = convertMap(x, y);
-            ChaseLogic chaseLogic = new ChaseLogic(chaseMap, size);
-            char direction = chaseLogic.returnStep();
+            ChaseLogicInterpretator chaseLogicInterpretator = new ChaseLogicInterpretator(chaseMap, size);
+            char direction = chaseLogicInterpretator.returnStep();
             moveEnemy(direction, x, y);
         }
-
     }
 
     private boolean moveEnemy(char direction, int x, int y) {
