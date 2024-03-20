@@ -20,6 +20,14 @@ public class Render {
         properties = new Properties("target/classes/application-" + profile + ".properties");
     }
 
+    public void run(Map map, String mode) {
+        if (mode.equals("development")) {
+            developmentMode(map);
+        } else {
+            productionMode(map);
+        }
+    }
+
     private void isGameOver(Map map) {
         if (map.isWin()) {
             gameOver = 1;
@@ -56,14 +64,6 @@ public class Render {
             textGraphics.putString((terminal.getTerminalSize().getColumns() - 1) / 2,
                     (terminal.getTerminalSize().getRows() - 1) / 2, "You lose!", SGR.BOLD);
             Thread.sleep(2000);
-        }
-    }
-
-    public void run(Map map, String mode) {
-        if (mode.equals("development")) {
-            developmentMode(map);
-        } else {
-            productionMode(map);
         }
     }
 

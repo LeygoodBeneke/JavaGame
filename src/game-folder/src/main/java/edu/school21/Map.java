@@ -1,7 +1,5 @@
 package edu.school21;
 
-import com.diogonunes.jcdp.color.api.Ansi;
-import com.diogonunes.jcdp.color.ColoredPrinter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -330,16 +328,5 @@ public class Map {
         return isReachable(visited, x + 1, y) || isReachable(visited, x - 1, y) || isReachable(visited, x, y + 1)
                 || isReachable(visited, x, y - 1);
     }
-
-    // public void printMap() {
-    // ColoredPrinter cp = new ColoredPrinter.Builder(1, false).build();
-    // for (int i = 0; i < size; i++) {
-    // for (int j = 0; j < size; j++) {
-    // cp.setBackgroundColor(Ansi.BColor.valueOf(properties.getColor(maze[i][j].getValue())));
-    // cp.print(maze[i][j].getValue());
-    // }
-    // System.out.println();
-    // }
-    // }
 
 }
