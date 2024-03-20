@@ -1,16 +1,9 @@
 package edu.school21;
 
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.SGR;
 import com.beust.jcommander.JCommander;
 
 public class Game {
     private static Game instance;
-    private int gameOver = 0;
 
     private Game() {
     }
@@ -20,14 +13,6 @@ public class Game {
             instance = new Game();
         }
         return instance;
-    }
-
-    private void isGameOver(Map map) {
-        if (map.isWin()) {
-            gameOver = 1;
-        } else if (map.isLose()) {
-            gameOver = -1;
-        }
     }
 
     public void run(String[] args) {
@@ -47,63 +32,9 @@ public class Game {
                 arguments.getEnemiesCount(),
                 arguments.getProfile());
         map.generateStartMap();
+        Render render = new Render(arguments.getProfile());
 
-        DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
-        Terminal terminal = null;
-        try {
-            terminal = defaultTerminalFactory.createTerminal();
-            terminal.enterPrivateMode();
-            terminal.clearScreen();
-            terminal.setCursorVisible(false);
-
-            map.printMap();
-            isGameOver(map);
-            KeyStroke keyStroke;
-            while (gameOver == 0) {
-                keyStroke = terminal.readInput();
-                if (keyStroke.getCharacter() == '9')
-                    gameOver = -1;
-                if (map.movePlayer(keyStroke.getCharacter())) {
-                    isGameOver(map);
-                    terminal.clearScreen();
-                    if (arguments.getProfile().equals("development")) {
-                        map.moveEnemies();
-                    } else {
-                        map.moveEnemies();
-                    }
-                    isGameOver(map);
-                    map.printMap();
-                    terminal.flush();
-                }
-
-            }
-            terminal.clearScreen();
-            final TextGraphics textGraphics = terminal.newTextGraphics();
-            if (gameOver > 0) {
-                textGraphics.setBackgroundColor(TextColor.ANSI.GREEN);
-                textGraphics.setForegroundColor(TextColor.ANSI.BLACK);
-                textGraphics.putString((terminal.getTerminalSize().getColumns() - 1) / 2,
-                        (terminal.getTerminalSize().getRows() - 1) / 2, "You win!", SGR.BOLD);
-                Thread.sleep(2000);
-            } else {
-                textGraphics.setBackgroundColor(TextColor.ANSI.RED);
-                textGraphics.setForegroundColor(TextColor.ANSI.WHITE);
-                textGraphics.putString((terminal.getTerminalSize().getColumns() - 1) / 2,
-                        (terminal.getTerminalSize().getRows() - 1) / 2, "You lose!", SGR.BOLD);
-                Thread.sleep(2000);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (terminal != null) {
-                    terminal.close();
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-        }
+        render.run(map, arguments.getProfile());
 
     }
 }

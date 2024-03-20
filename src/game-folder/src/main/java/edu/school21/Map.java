@@ -20,6 +20,14 @@ public class Map {
         this.maze = new Cell[size][size];
     }
 
+    public Cell[][] getMaze() {
+        return maze;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
     public void generateStartMap() {
         generateRandomMap();
         while (!isTargetReachable()) {
@@ -123,6 +131,13 @@ public class Map {
     }
 
     public void moveEnemies() {
+        List<int[]> enemies = getEnemies();
+        for (int[] enemy : enemies) {
+            moveSingleEnemy(enemy[0], enemy[1]);
+        }
+    }
+
+    public List<int[]> getEnemies() {
         List<int[]> enemies = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -131,9 +146,7 @@ public class Map {
                 }
             }
         }
-        for (int[] enemy : enemies) {
-            moveSingleEnemy(enemy[0], enemy[1]);
-        }
+        return enemies;
     }
 
     public void moveSingleEnemy(int x, int y) {
@@ -208,6 +221,16 @@ public class Map {
             }
         }
         map[x][y] = -2;
+        for (int i = x - 1; i >= x + 1; i++) {
+            for (int j = y - 1; j >= y + 1; j++) {
+                if (i != x && j != y) {
+                    continue;
+                }
+                if (maze[i][j].getValue() == properties.getEnemy()) {
+                    map[i][j] = 1;
+                }
+            }
+        }
         return map;
     }
 
@@ -308,15 +331,15 @@ public class Map {
                 || isReachable(visited, x, y - 1);
     }
 
-    public void printMap() {
-        ColoredPrinter cp = new ColoredPrinter.Builder(1, false).build();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                cp.setBackgroundColor(Ansi.BColor.valueOf(properties.getColor(maze[i][j].getValue())));
-                cp.print(maze[i][j].getValue());
-            }
-            System.out.println();
-        }
-    }
+    // public void printMap() {
+    // ColoredPrinter cp = new ColoredPrinter.Builder(1, false).build();
+    // for (int i = 0; i < size; i++) {
+    // for (int j = 0; j < size; j++) {
+    // cp.setBackgroundColor(Ansi.BColor.valueOf(properties.getColor(maze[i][j].getValue())));
+    // cp.print(maze[i][j].getValue());
+    // }
+    // System.out.println();
+    // }
+    // }
 
 }
