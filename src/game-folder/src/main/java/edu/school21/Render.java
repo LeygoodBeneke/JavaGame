@@ -85,7 +85,6 @@ public class Render {
                     isGameOver(map);
                     printMap(map, properties);
                     System.out.println("Now it's time for the enemies to move.");
-                    // printMap(map, properties);
                     System.out.println();
                     List<int[]> enemies = map.getEnemies();
                     for (int[] enemy : enemies) {
