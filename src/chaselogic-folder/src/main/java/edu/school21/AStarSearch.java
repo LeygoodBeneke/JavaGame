@@ -126,9 +126,7 @@ public class AStarSearch {
                             return tracePath(nodeDetails, dest);
                         } else if (!closedList[neighbour.first][neighbour.second]
                                 && isUnblocked(neighbour, map, size)) {
-                            double gNew = nodeDetails[i][j].distance + 1.0;
-                            double hNew = distance(neighbour.first, neighbour.second, dest.first, dest.second);
-                            double fNew = gNew + hNew;
+                            double fNew = distance(neighbour.first, neighbour.second, dest.first, dest.second);
                             if (nodeDetails[neighbour.first][neighbour.second].distance > fNew) {
                                 openList.add(new Tuple(fNew, neighbour.first, neighbour.second));
                                 nodeDetails[neighbour.first][neighbour.second].distance = fNew;
