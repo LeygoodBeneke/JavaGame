@@ -65,6 +65,8 @@ public class Render {
                     (terminal.getTerminalSize().getRows() - 1) / 2, "You lose!", SGR.BOLD);
             Thread.sleep(2000);
         }
+        textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
+        textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
     }
 
     private void developmentMode(Map map) {
@@ -108,7 +110,6 @@ public class Render {
             System.out.println(e.getMessage());
         } finally {
             try {
-                terminal.flush();
                 terminal.setCursorVisible(true);
                 if (terminal != null) {
                     terminal.close();
