@@ -100,6 +100,7 @@ public class Render {
                             keyStroke = terminal.readInput();
                         }
                     }
+                    System.out.println("Now it's time for the player to move.");
                 }
             }
             gameIsOver(terminal);
@@ -107,6 +108,8 @@ public class Render {
             System.out.println(e.getMessage());
         } finally {
             try {
+                terminal.flush();
+                terminal.setCursorVisible(true);
                 if (terminal != null) {
                     terminal.close();
                 }
